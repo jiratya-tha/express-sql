@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_PID=${MSSQL_PID}
+      - MSSQL_AGENT_ENABLED=true
+      - MSSQL_TELEMETRY_ENABLED=false
+      - MSSQL_MEMORY_LIMIT_MB=2048
+    ports:
+      - ${MSSQL_PORT}:1433
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${MSSQL_SA_PASSWORD} -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+    shm_size: '2gb'
+
+  express-sql:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: express-sql
+    ports:
+      - "3003:3000"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      - DB_SERVER=sqlserver
+      - DB_USER=sa
+      - DB_PASSWORD=${MSSQL_SA_PASSWORD}
+      - DB_NAME=${MSSQL_DATABASE}
+      - DB_PORT=1433
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
+

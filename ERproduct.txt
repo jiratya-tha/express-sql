@@ -1,0 +1,57 @@
+erDiagram
+    PRODUCT {
+        int product_id PK
+        varchar name
+        text description
+        decimal price
+        int stock_quantity
+        int category_id FK
+        boolean is_active
+    }
+    
+    CATEGORY {
+        int category_id PK
+        varchar name
+        text description
+    }
+    
+    USER {
+        int user_id PK
+        varchar email
+        varchar password_hash
+        varchar full_name
+        varchar phone
+    }
+    
+    ADDRESS {
+        int address_id PK
+        int user_id FK
+        varchar full_address
+        varchar city
+        varchar postal_code
+        varchar country
+    }
+    
+    ORDER {
+        int order_id PK
+        int user_id FK
+        int address_id FK
+        decimal total_amount
+        varchar status
+        timestamp order_date
+    }
+    
+    ORDER_ITEM {
+        int order_item_id PK
+        int order_id FK
+        int product_id FK
+        int quantity
+        decimal unit_price
+    }
+    
+    CATEGORY ||--o{ PRODUCT : "contains"
+    USER ||--o{ ADDRESS : "has"
+    USER ||--o{ ORDER : "places"
+    ADDRESS ||--o{ ORDER : "ships_to"
+    ORDER ||--o{ ORDER_ITEM : "contains"
+    PRODUCT ||--o{ ORDER_ITEM : "included_in"
