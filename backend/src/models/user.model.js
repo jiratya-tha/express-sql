@@ -2,7 +2,7 @@ const { sql, pool, poolConnect } = require('../config/db.config');
 
 class User {
     constructor(user) {
-        this.id = user.id;
+        this.id = user.user_id || user.id; // Handle both user_id (from DB) and id (from API)
         this.username = user.username;
         this.email = user.email;
         this.password = user.password;

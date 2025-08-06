@@ -41,6 +41,7 @@ services:
       - DB_PORT=1433
       - NODE_ENV=development
       - EXPRESS_PORT=3000
+      - JWT_SECRET=${JWT_SECRET}
     volumes:
       - ./backend:/app
       - /app/node_modules

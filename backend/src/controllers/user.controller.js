@@ -1,5 +1,6 @@
 const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 class UserController {
     // Create a new user
@@ -35,9 +36,17 @@ class UserController {
             // Remove password from response
             const { password: _, ...userWithoutPassword } = user;
 
+            // Generate JWT token
+            const token = jwt.sign(
+                { id: user.id, email: user.email },
+                process.env.JWT_SECRET,
+                { expiresIn: '1d' }
+            );
+
             res.status(201).json({
                 message: 'User created successfully',
-                data: userWithoutPassword
+                data: userWithoutPassword,
+                token
             });
         } catch (err) {
             console.error('Error in register:', err);
@@ -79,9 +88,17 @@ class UserController {
             // Remove password from response
             const { password: _, ...userWithoutPassword } = user;
 
+            // Generate JWT token
+            const token = jwt.sign(
+                { id: user.id, email: user.email },
+                process.env.JWT_SECRET,
+                { expiresIn: '1d' }
+            );
+
             res.json({
                 message: 'Login successful',
-                data: userWithoutPassword
+                data: userWithoutPassword,
+                token
             });
         } catch (err) {
             console.error('Error in login:', err);
@@ -95,7 +112,8 @@ class UserController {
     // Get user profile
     static async getProfile(req, res) {
         try {
-            const userId = req.params.id;
+            // Use authenticated user's ID from JWT token
+            const userId = req.user.id;
             const user = await User.findById(userId);
 
             if (!user) {
@@ -108,7 +126,7 @@ class UserController {
             const { password: _, ...userWithoutPassword } = user;
 
             res.json({
-                message: 'User profile retrieved successfully',
+                message: 'Profile retrieved successfully',
                 data: userWithoutPassword
             });
         } catch (err) {
@@ -123,7 +141,8 @@ class UserController {
     // Update user profile
     static async updateProfile(req, res) {
         try {
-            const userId = req.params.id;
+            // Use authenticated user's ID from JWT token
+            const userId = req.user.id;
             const { username, email, password } = req.body;
 
             // Check if user exists
@@ -166,7 +185,8 @@ class UserController {
     // Delete user
     static async deleteUser(req, res) {
         try {
-            const userId = req.params.id;
+            // Use authenticated user's ID from JWT token
+            const userId = req.user.id;
             const deleted = await User.delete(userId);
 
             if (!deleted) {
