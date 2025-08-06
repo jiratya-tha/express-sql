@@ -39,10 +39,12 @@ const Register: React.FC = () => {
       const { confirmPassword, ...registerData } = data;
       const result = await register(registerData).unwrap();
       
-      dispatch(setCredentials({
-        user: result.user,
-        token: result.token,
-      }));
+      if (result.data) {
+        dispatch(setCredentials({
+          user: result.data,
+          token: result.token,
+        }));
+      }
       
       dispatch(addNotification({
         type: 'success',

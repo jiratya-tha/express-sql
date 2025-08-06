@@ -35,10 +35,12 @@ const Login: React.FC = () => {
     try {
       const result = await login(data).unwrap();
       
-      dispatch(setCredentials({
-        user: result.user,
-        token: result.token,
-      }));
+      if (result.data) {
+        dispatch(setCredentials({
+          user: result.data,
+          token: result.token,
+        }));
+      }
       
       dispatch(addNotification({
         type: 'success',
@@ -59,7 +61,7 @@ const Login: React.FC = () => {
       <div className="auth-card">
         <div className="auth-header">
           <h1>Sign In</h1>
-          <p>Welcome back! Please sign in to your account.</p>
+          <p>Welcome back! Please sign in to your account. naja Pleasssssssss</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="auth-form">

@@ -58,9 +58,11 @@ const UserProfile: React.FC = () => {
         data: updateData,
       }).unwrap();
 
-      dispatch(setCredentials({
-        user: result.user,
-      }));
+      if (result.data) {
+        dispatch(setCredentials({
+          user: result.data,
+        }));
+      }
 
       dispatch(addNotification({
         type: 'success',

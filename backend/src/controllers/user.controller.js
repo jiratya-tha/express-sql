@@ -37,7 +37,7 @@ class UserController {
 
             res.status(201).json({
                 message: 'User created successfully',
-                user: userWithoutPassword
+                data: userWithoutPassword
             });
         } catch (err) {
             console.error('Error in register:', err);
@@ -81,7 +81,7 @@ class UserController {
 
             res.json({
                 message: 'Login successful',
-                user: userWithoutPassword
+                data: userWithoutPassword
             });
         } catch (err) {
             console.error('Error in login:', err);
@@ -108,7 +108,8 @@ class UserController {
             const { password: _, ...userWithoutPassword } = user;
 
             res.json({
-                user: userWithoutPassword
+                message: 'User profile retrieved successfully',
+                data: userWithoutPassword
             });
         } catch (err) {
             console.error('Error getting profile:', err);
@@ -151,7 +152,7 @@ class UserController {
 
             res.json({
                 message: 'Profile updated successfully',
-                user: userWithoutPassword
+                data: userWithoutPassword
             });
         } catch (err) {
             console.error('Error updating profile:', err);
@@ -189,7 +190,10 @@ class UserController {
     static async getAllUsers(req, res) {
         try {
             const users = await User.findAll();
-            res.json(users);
+            res.json({
+                message: 'Users retrieved successfully',
+                data: users
+            });
         } catch (err) {
             console.error('Error getting all users:', err);
             res.status(500).json({

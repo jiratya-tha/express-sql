@@ -78,7 +78,7 @@ const Dashboard: React.FC = () => {
             ) : (
               <div className="info-row">
                 <span className="label">Total Users:</span>
-                <span className="value highlight">{usersData?.length || 0}</span>
+                <span className="value highlight">{usersData?.data?.length || 0}</span>
               </div>
             )}
           </div>
