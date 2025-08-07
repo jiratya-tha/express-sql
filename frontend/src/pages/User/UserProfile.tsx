@@ -40,6 +40,17 @@ const UserProfile: React.FC = () => {
     },
   });
 
+  // Update form values when user changes
+  React.useEffect(() => {
+    if (user) {
+      reset({
+        username: user.username || '',
+        email: user.email || '',
+        password: '',
+      });
+    }
+  }, [user, reset]);
+
   const onSubmit = async (data: ProfileFormData) => {
     if (!user) return;
 
@@ -88,7 +99,7 @@ const UserProfile: React.FC = () => {
   };
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <div>No user data found.</div>;
   }
 
   return (

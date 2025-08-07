@@ -38,7 +38,12 @@ class UserController {
 
             // Generate JWT token
             const token = jwt.sign(
-                { id: user.id, email: user.email },
+                { 
+                    id: user.id, 
+                    email: user.email,
+                    username: user.username,
+                    created_at: user.created_at
+                },
                 process.env.JWT_SECRET,
                 { expiresIn: '1d' }
             );
@@ -90,7 +95,12 @@ class UserController {
 
             // Generate JWT token
             const token = jwt.sign(
-                { id: user.id, email: user.email },
+                { 
+                    id: user.id, 
+                    email: user.email,
+                    username: user.username,
+                    created_at: user.created_at
+                },
                 process.env.JWT_SECRET,
                 { expiresIn: '1d' }
             );

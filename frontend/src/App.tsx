@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import { useAppSelector } from './hooks/reduxHooks';
+import { useAppSelector, useAppDispatch } from './hooks/reduxHooks';
+import { initializeFromToken } from './store/slices/authSlice';
 import Layout from './components/Layout/Layout';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
@@ -11,6 +12,12 @@ import ProtectedRoute from './components/Auth/ProtectedRoute';
 
 function App() {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+
+  // Initialize user data from token on app load
+  useEffect(() => {
+    dispatch(initializeFromToken());
+  }, [dispatch]);
 
   return (
     <div className="App">
